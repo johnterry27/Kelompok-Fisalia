@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,7 +20,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class CategoryForm extends JFrame {
-    private JTextField idField, nameField, descField;
+    private JTextField idField, nameField;
+    private JComboBox<String> descComboBox;
     private JButton addButton, editButton, deleteButton;
     private JTable categoryTable;
     private DefaultTableModel tableModel;
@@ -39,12 +41,16 @@ public class CategoryForm extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel idLabel = new JLabel("ID");
+        JLabel idLabel = new JLabel("Kode");
         JLabel nameLabel = new JLabel("Nama");
-        JLabel descLabel = new JLabel("Deskripsi");
+        JLabel descLabel = new JLabel("Kategori");
+
         idField = new JTextField(20);
         nameField = new JTextField(20);
-        descField = new JTextField(20);
+        descComboBox = new JComboBox<>(new String[] {
+            "Coffee", "Dairy", "Juice", "Soda", "Tea"
+        });
+
         addButton = new JButton("Tambah");
         editButton = new JButton("Edit");
         deleteButton = new JButton("Hapus");
@@ -62,7 +68,7 @@ public class CategoryForm extends JFrame {
         gbc.gridx = 0; gbc.gridy = 2;
         inputPanel.add(descLabel, gbc);
         gbc.gridx = 1;
-        inputPanel.add(descField, gbc);
+        inputPanel.add(descComboBox, gbc);
 
         gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 3;
         JPanel buttonPanel = new JPanel();
@@ -74,7 +80,7 @@ public class CategoryForm extends JFrame {
         add(inputPanel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = {"ID", "Nama", "Deskripsi"};
+        String[] columnNames = {"ID", "Nama", "Kategori"};
         tableModel = new DefaultTableModel(columnNames, 0);
         categoryTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(categoryTable);
@@ -90,7 +96,7 @@ public class CategoryForm extends JFrame {
             if (selectedRow >= 0) {
                 idField.setText(tableModel.getValueAt(selectedRow, 0).toString());
                 nameField.setText(tableModel.getValueAt(selectedRow, 1).toString());
-                descField.setText(tableModel.getValueAt(selectedRow, 2).toString());
+                descComboBox.setSelectedItem(tableModel.getValueAt(selectedRow, 2).toString());
             }
         });
 
@@ -100,7 +106,7 @@ public class CategoryForm extends JFrame {
     private void addCategory() {
         String id = idField.getText();
         String name = nameField.getText();
-        String desc = descField.getText();
+        String desc = descComboBox.getSelectedItem().toString();
         if (!id.isEmpty() && !name.isEmpty()) {
             Category category = new Category(id, name, desc);
             categories.add(category);
@@ -116,7 +122,7 @@ public class CategoryForm extends JFrame {
         if (selectedRow >= 0) {
             String id = idField.getText();
             String name = nameField.getText();
-            String desc = descField.getText();
+            String desc = descComboBox.getSelectedItem().toString();
             tableModel.setValueAt(id, selectedRow, 0);
             tableModel.setValueAt(name, selectedRow, 1);
             tableModel.setValueAt(desc, selectedRow, 2);
@@ -145,7 +151,7 @@ public class CategoryForm extends JFrame {
     private void clearFields() {
         idField.setText("");
         nameField.setText("");
-        descField.setText("");
+        descComboBox.setSelectedIndex(0);
     }
 
     public static void main(String[] args) {
