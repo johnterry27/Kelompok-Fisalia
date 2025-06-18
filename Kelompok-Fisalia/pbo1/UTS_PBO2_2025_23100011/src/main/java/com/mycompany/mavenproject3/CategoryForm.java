@@ -44,13 +44,13 @@ public class CategoryForm extends JFrame {
         panel.add(idField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
-        panel.add(new JLabel("Nama"), gbc);
+        panel.add(new JLabel("Kategori"), gbc);
         gbc.gridx = 1;
         nameField = new JTextField(20);
         panel.add(nameField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
-        panel.add(new JLabel("Deskripsi"), gbc);
+        panel.add(new JLabel("Nama"), gbc);
         gbc.gridx = 1;
         descField = new JTextField(20);
         panel.add(descField, gbc);
@@ -68,7 +68,7 @@ public class CategoryForm extends JFrame {
         panel.add(btnPanel, gbc);
 
         // Tabel
-        model = new DefaultTableModel(new Object[]{"ID", "Nama", "Deskripsi"}, 0);
+        model = new DefaultTableModel(new Object[]{"ID", "Kategori", "Nama"}, 0);
         table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
 
