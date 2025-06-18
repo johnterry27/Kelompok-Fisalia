@@ -20,13 +20,14 @@ public class Mavenproject3 extends JFrame implements Runnable {
     private JButton addSellButton;
     private JButton addCustomerButton;
     private JButton kelolaKategoriButton;
+    private JButton laporanPenjualanButton;
     private List<Product> productList = new ArrayList<>();
     private List<String> categoryList = new ArrayList<>(List.of("Coffee", "Dairy", "Juice", "Soda", "Tea"));
     private List<ProductForm> productForms = new ArrayList<>();
 
     public Mavenproject3() {
         setTitle("WK. STI Chill");
-        setSize(600, 150);
+        setSize(800, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -49,11 +50,13 @@ public class Mavenproject3 extends JFrame implements Runnable {
         addSellButton = new JButton("Penjualan");
         addCustomerButton = new JButton("Kelola Customer");
         kelolaKategoriButton = new JButton("Kategori Produk");
+        laporanPenjualanButton = new JButton("Laporan Penjualan");
 
         bottomPanel.add(addProductButton);
         bottomPanel.add(addSellButton);
         bottomPanel.add(addCustomerButton);
         bottomPanel.add(kelolaKategoriButton);
+        bottomPanel.add(laporanPenjualanButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
         addProductButton.addActionListener(e -> {
@@ -65,6 +68,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         addSellButton.addActionListener(e -> new SellingForm(this).setVisible(true));
         addCustomerButton.addActionListener(e -> new CustomerForm().setVisible(true));
         kelolaKategoriButton.addActionListener(e -> new CategoryForm(this).setVisible(true));
+        laporanPenjualanButton.addActionListener(e -> new SalesReport(this).setVisible(true));
 
         setVisible(true);
         new Thread(this).start();
