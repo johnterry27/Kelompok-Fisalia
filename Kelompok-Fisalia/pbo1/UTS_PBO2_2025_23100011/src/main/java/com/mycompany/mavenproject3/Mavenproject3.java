@@ -48,7 +48,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         addProductButton = new JButton("Kelola Produk");
         addSellButton = new JButton("Penjualan");
         addCustomerButton = new JButton("Kelola Customer");
-        kelolaKategoriButton = new JButton("Kelola Kategori");
+        kelolaKategoriButton = new JButton("Kategori Produk");
 
         bottomPanel.add(addProductButton);
         bottomPanel.add(addSellButton);
