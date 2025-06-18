@@ -20,6 +20,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
     private JButton addSellButton;
     private JButton addCustomerButton;
     private JButton kelolaKategoriButton;
+    private JButton laporanPenjualanButton;
     private List<Product> productList = new ArrayList<>();
 
     public Mavenproject3() {
@@ -49,11 +50,13 @@ public class Mavenproject3 extends JFrame implements Runnable {
         addSellButton = new JButton("Penjualan");
         addCustomerButton = new JButton("Kelola Customer");
         kelolaKategoriButton = new JButton("Kelola Kategori");
+        laporanPenjualanButton = new JButton("Laporan Penjualan");
 
         bottomPanel.add(addProductButton);
         bottomPanel.add(addSellButton);
         bottomPanel.add(addCustomerButton);
         bottomPanel.add(kelolaKategoriButton);
+        bottomPanel.add(laporanPenjualanButton);
 
         add(bottomPanel, BorderLayout.SOUTH);
 
@@ -62,6 +65,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         addSellButton.addActionListener(e -> new SellingForm(this).setVisible(true));
         addCustomerButton.addActionListener(e -> new CustomerForm().setVisible(true));
         kelolaKategoriButton.addActionListener(e -> new CategoryForm().setVisible(true));
+        laporanPenjualanButton.addActionListener(e -> new SalesReport(this).setVisible(true));
 
         setVisible(true);
 
