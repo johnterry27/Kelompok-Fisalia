@@ -1,25 +1,18 @@
 package com.mycompany.mavenproject3;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class SellingForm extends JFrame {
     private JComboBox<String> productField;
     private JTextField stockField;
     private JTextField priceField;
     private JTextField qtyField;
+    private JSpinner dateSpinner;
     private JButton processButton;
     private List<Product> products;
     private Mavenproject3 mainApp;
@@ -29,7 +22,7 @@ public class SellingForm extends JFrame {
         this.products = mainApp.getProductList();
 
         setTitle("WK. Cuan | Jual Barang");
-        setSize(400, 300);
+        setSize(400, 350);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -75,9 +68,19 @@ public class SellingForm extends JFrame {
         gbc.gridx = 1;
         sellPanel.add(qtyField, gbc);
 
+        // Tanggal Penjualan
+        gbc.gridx = 0; gbc.gridy = 4;
+        sellPanel.add(new JLabel("Tanggal:"), gbc);
+
+        dateSpinner = new JSpinner(new SpinnerDateModel());
+        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd-MM-yyyy");
+        dateSpinner.setEditor(dateEditor);
+        gbc.gridx = 1;
+        sellPanel.add(dateSpinner, gbc);
+
         // Tombol proses
         processButton = new JButton("Proses");
-        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
         sellPanel.add(processButton, gbc);
 
         add(sellPanel);
@@ -105,11 +108,18 @@ public class SellingForm extends JFrame {
                     }
 
                     selectedProduct.setStock(selectedProduct.getStock() - qty);
-                    JOptionPane.showMessageDialog(SellingForm.this, "Transaksi berhasil!\nSisa stok: " + selectedProduct.getStock());
+
+                    // Format tanggal
+                    Date selectedDate = (Date) dateSpinner.getValue();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    String tanggalTerjual = sdf.format(selectedDate);
+
+                    JOptionPane.showMessageDialog(SellingForm.this,
+                        "Transaksi berhasil!\nTanggal: " + tanggalTerjual +
+                        "\nSisa stok: " + selectedProduct.getStock());
 
                     updateFields();
                     qtyField.setText("");
-
                     mainApp.refreshBanner();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(SellingForm.this, "Qty harus berupa angka.");
