@@ -1,9 +1,21 @@
 package com.mycompany.mavenproject3;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 
 public class ProductForm extends JFrame {
     private JTable drinkTable;
@@ -14,19 +26,23 @@ public class ProductForm extends JFrame {
     private Mavenproject3 mainApp;
     private List<Product> products;
 
+
     public ProductForm(Mavenproject3 mainApp) {
         this.mainApp = mainApp;
         this.products = mainApp.getProductList();
+
 
         setTitle("WK. Cuan | Stok Barang");
         setSize(700, 500);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
+
         tableModel = new DefaultTableModel(new String[]{"Kode", "Nama", "Kategori", "Harga Jual", "Stok"}, 0);
         drinkTable = new JTable(tableModel);
         loadProductData(products);
         add(new JScrollPane(drinkTable), BorderLayout.CENTER);
+
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         codeField = new JTextField(7);
@@ -35,11 +51,13 @@ public class ProductForm extends JFrame {
         priceField = new JTextField(7);
         stockField = new JTextField(5);
 
+
         inputPanel.add(new JLabel("Kode:")); inputPanel.add(codeField);
         inputPanel.add(new JLabel("Nama:")); inputPanel.add(nameField);
         inputPanel.add(new JLabel("Kategori:")); inputPanel.add(categoryField);
         inputPanel.add(new JLabel("Harga:")); inputPanel.add(priceField);
         inputPanel.add(new JLabel("Stok:")); inputPanel.add(stockField);
+
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         saveButton = new JButton("Simpan");
@@ -49,10 +67,12 @@ public class ProductForm extends JFrame {
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
 
+
         JPanel controlPanel = new JPanel(new BorderLayout());
         controlPanel.add(inputPanel, BorderLayout.CENTER);
         controlPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(controlPanel, BorderLayout.SOUTH);
+
 
         saveButton.addActionListener(e -> {
             String code = codeField.getText();
@@ -61,10 +81,12 @@ public class ProductForm extends JFrame {
             String priceText = priceField.getText();
             String stockText = stockField.getText();
 
+
             if (code.isEmpty() || name.isEmpty() || priceText.isEmpty() || stockText.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Semua field harus diisi!");
                 return;
             }
+
 
             try {
                 double price = Double.parseDouble(priceText);
@@ -78,6 +100,7 @@ public class ProductForm extends JFrame {
             }
         });
 
+
         editButton.addActionListener(e -> {
             int row = drinkTable.getSelectedRow();
             if (row != -1) {
@@ -87,6 +110,7 @@ public class ProductForm extends JFrame {
                     String category = (String) categoryField.getSelectedItem();
                     double price = Double.parseDouble(priceField.getText());
                     int stock = Integer.parseInt(stockField.getText());
+
 
                     tableModel.setValueAt(code, row, 0);
                     tableModel.setValueAt(name, row, 1);
@@ -101,6 +125,7 @@ public class ProductForm extends JFrame {
             }
         });
 
+
         deleteButton.addActionListener(e -> {
             int row = drinkTable.getSelectedRow();
             if (row != -1) {
@@ -110,6 +135,7 @@ public class ProductForm extends JFrame {
                 clearFields();
             }
         });
+
 
         drinkTable.getSelectionModel().addListSelectionListener(e -> {
             int row = drinkTable.getSelectedRow();
@@ -123,6 +149,7 @@ public class ProductForm extends JFrame {
         });
     }
 
+
     private void clearFields() {
         codeField.setText("");
         nameField.setText("");
@@ -131,11 +158,13 @@ public class ProductForm extends JFrame {
         stockField.setText("");
     }
 
+
     private void loadProductData(List<Product> productList) {
         for (Product p : productList) {
             tableModel.addRow(new Object[]{p.getCode(), p.getName(), p.getCategory(), p.getPrice(), p.getStock()});
         }
     }
+
 
     public void updateCategoryCombo() {
         categoryField.removeAllItems();

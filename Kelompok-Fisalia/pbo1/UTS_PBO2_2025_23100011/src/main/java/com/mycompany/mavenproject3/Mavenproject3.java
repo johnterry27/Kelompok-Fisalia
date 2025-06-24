@@ -1,5 +1,6 @@
 package com.mycompany.mavenproject3;
 
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -10,6 +11,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 
 public class Mavenproject3 extends JFrame implements Runnable {
     private String text;
@@ -25,12 +27,14 @@ public class Mavenproject3 extends JFrame implements Runnable {
     private List<String> categoryList = new ArrayList<>(List.of("Coffee", "Dairy", "Juice", "Soda", "Tea"));
     private List<ProductForm> productForms = new ArrayList<>();
 
+
     public Mavenproject3() {
         setTitle("WK. STI Chill");
         setSize(800, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+
 
         // Produk awal
         productList.add(new Product(1, "P001", "Americano", "Coffee", 10000, 10));
@@ -39,11 +43,14 @@ public class Mavenproject3 extends JFrame implements Runnable {
         productList.add(new Product(4, "P004", "Matcha Frappucino", "Tea", 28000, 10));
         productList.add(new Product(5, "P005", "Jus Apel", "Juice", 17000, 10));
 
+
         this.text = getBannerTextFromProducts();
         this.x = -getFontMetrics(new Font("Arial", Font.BOLD, 18)).stringWidth(text);
 
+
         bannerPanel = new BannerPanel();
         add(bannerPanel, BorderLayout.CENTER);
+
 
         JPanel bottomPanel = new JPanel();
         addProductButton = new JButton("Kelola Produk");
@@ -52,6 +59,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         kelolaKategoriButton = new JButton("Kategori Produk");
         laporanPenjualanButton = new JButton("Laporan Penjualan");
 
+
         bottomPanel.add(addProductButton);
         bottomPanel.add(addSellButton);
         bottomPanel.add(addCustomerButton);
@@ -59,20 +67,24 @@ public class Mavenproject3 extends JFrame implements Runnable {
         bottomPanel.add(laporanPenjualanButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
+
         addProductButton.addActionListener(e -> {
             ProductForm pf = new ProductForm(this);
             productForms.add(pf);
             pf.setVisible(true);
         });
 
+
         addSellButton.addActionListener(e -> new SellingForm(this).setVisible(true));
         addCustomerButton.addActionListener(e -> new CustomerForm().setVisible(true));
         kelolaKategoriButton.addActionListener(e -> new CategoryForm(this).setVisible(true));
         laporanPenjualanButton.addActionListener(e -> new SalesReport(this).setVisible(true));
 
+
         setVisible(true);
         new Thread(this).start();
     }
+
 
     private class BannerPanel extends JPanel {
         @Override
@@ -83,6 +95,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
             g.drawString(text, x, getHeight() / 2 + 7);
         }
     }
+
 
     @Override
     public void run() {
@@ -101,6 +114,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
+
     public String getBannerTextFromProducts() {
         StringBuilder sb = new StringBuilder("Menu yang tersedia: ");
         for (int i = 0; i < productList.size(); i++) {
@@ -110,22 +124,27 @@ public class Mavenproject3 extends JFrame implements Runnable {
         return sb.toString();
     }
 
+
     public void setBannerText(String newText) {
         this.text = newText;
         this.x = -getFontMetrics(new Font("Arial", Font.BOLD, 18)).stringWidth(text);
     }
 
+
     public void refreshBanner() {
         setBannerText(getBannerTextFromProducts());
     }
+
 
     public List<Product> getProductList() {
         return productList;
     }
 
+
     public List<String> getCategoryList() {
         return categoryList;
     }
+
 
     public void addCategory(String category) {
         if (!categoryList.contains(category)) {
@@ -134,16 +153,19 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
+
     public void removeCategory(String category) {
         categoryList.remove(category);
         updateAllProductFormCategoryCombo();
     }
+
 
     public void updateAllProductFormCategoryCombo() {
         for (ProductForm pf : productForms) {
             pf.updateCategoryCombo();
         }
     }
+
 
     public static void main(String[] args) {
         new Mavenproject3();
