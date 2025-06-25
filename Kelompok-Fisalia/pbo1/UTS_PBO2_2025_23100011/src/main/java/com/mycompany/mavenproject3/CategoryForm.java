@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,12 +26,12 @@ public class CategoryForm extends JFrame {
 
     public CategoryForm(Mavenproject3 mainApp) {
         this.mainApp = mainApp;
+
         setTitle("Kelola Kategori");
         setSize(700, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Panel Form
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.LIGHT_GRAY);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -50,12 +51,11 @@ public class CategoryForm extends JFrame {
         panel.add(nameField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
-        panel.add(new JLabel("Nama"), gbc);
+        panel.add(new JLabel("Deskripsi"), gbc);
         gbc.gridx = 1;
         descField = new JTextField(20);
         panel.add(descField, gbc);
 
-        // Tombol
         gbc.gridx = 1; gbc.gridy = 3;
         gbc.gridwidth = 3;
         JPanel btnPanel = new JPanel();
@@ -67,18 +67,24 @@ public class CategoryForm extends JFrame {
         btnPanel.add(deleteBtn);
         panel.add(btnPanel, gbc);
 
-        // Tabel
-        model = new DefaultTableModel(new Object[]{"ID", "Kategori", "Nama"}, 0);
+        model = new DefaultTableModel(new Object[]{"ID", "Kategori", "Deskripsi"}, 0);
         table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Event tombol (sementara untuk percobaan)
+        loadCategoryData();
+
         addBtn.addActionListener(e -> {
-            String id = idField.getText();
-            String name = nameField.getText();
-            String desc = descField.getText();
-            model.addRow(new Object[]{id, name, desc});
-            if (mainApp != null) mainApp.addCategory(name); // sinkron ke main app
+            String id = idField.getText().trim();
+            String name = nameField.getText().trim();
+            String desc = descField.getText().trim();
+
+            if (!name.isEmpty() && !isCategoryExist(name)) {
+                model.addRow(new Object[]{id, name, desc});
+                if (mainApp != null) {
+                    mainApp.addCategory(name);
+                    mainApp.updateAllProductFormCategoryCombo(); // Penting
+                }
+            }
         });
 
         deleteBtn.addActionListener(e -> {
@@ -86,7 +92,10 @@ public class CategoryForm extends JFrame {
             if (selected != -1) {
                 String category = model.getValueAt(selected, 1).toString();
                 model.removeRow(selected);
-                if (mainApp != null) mainApp.removeCategory(category);
+                if (mainApp != null) {
+                    mainApp.removeCategory(category);
+                    mainApp.updateAllProductFormCategoryCombo(); // Penting
+                }
             }
         });
 
@@ -101,5 +110,25 @@ public class CategoryForm extends JFrame {
 
         getContentPane().add(panel, BorderLayout.NORTH);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private boolean isCategoryExist(String name) {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (name.equalsIgnoreCase(model.getValueAt(i, 1).toString())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void loadCategoryData() {
+        if (mainApp != null) {
+            List<String> categories = mainApp.getCategoryList();
+            model.setRowCount(0);
+            int i = 1;
+            for (String cat : categories) {
+                model.addRow(new Object[]{"C" + i++, cat, ""});
+            }
+        }
     }
 }
