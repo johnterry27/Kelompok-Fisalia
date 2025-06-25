@@ -1,6 +1,5 @@
 package com.mycompany.mavenproject3;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -12,21 +11,22 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
 public class Mavenproject3 extends JFrame implements Runnable {
     private String text;
     private int x;
     private int width;
+
     private BannerPanel bannerPanel;
     private JButton addProductButton;
     private JButton addSellButton;
     private JButton addCustomerButton;
     private JButton kelolaKategoriButton;
     private JButton laporanPenjualanButton;
+
     private List<Product> productList = new ArrayList<>();
     private List<String> categoryList = new ArrayList<>(List.of("Coffee", "Dairy", "Juice", "Soda", "Tea"));
     private List<ProductForm> productForms = new ArrayList<>();
-
+    private List<Sale> sales = new ArrayList<>(); // Tambahkan ini untuk simpan transaksi
 
     public Mavenproject3() {
         setTitle("WK. STI Chill");
@@ -35,30 +35,27 @@ public class Mavenproject3 extends JFrame implements Runnable {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-
-        // Produk awal
+        // === Data Produk Awal ===
         productList.add(new Product(1, "P001", "Americano", "Coffee", 10000, 10));
         productList.add(new Product(2, "P002", "Pandan Latte", "Coffee", 20000, 10));
         productList.add(new Product(3, "P003", "Aren Latte", "Coffee", 15000, 10));
         productList.add(new Product(4, "P004", "Matcha Frappucino", "Tea", 28000, 10));
         productList.add(new Product(5, "P005", "Jus Apel", "Juice", 17000, 10));
 
-
         this.text = getBannerTextFromProducts();
         this.x = -getFontMetrics(new Font("Arial", Font.BOLD, 18)).stringWidth(text);
 
-
+        // === Banner ===
         bannerPanel = new BannerPanel();
         add(bannerPanel, BorderLayout.CENTER);
 
-
+        // === Panel Bawah: Tombol Navigasi ===
         JPanel bottomPanel = new JPanel();
         addProductButton = new JButton("Kelola Produk");
         addSellButton = new JButton("Penjualan");
         addCustomerButton = new JButton("Kelola Customer");
         kelolaKategoriButton = new JButton("Kategori Produk");
         laporanPenjualanButton = new JButton("Laporan Penjualan");
-
 
         bottomPanel.add(addProductButton);
         bottomPanel.add(addSellButton);
@@ -67,25 +64,24 @@ public class Mavenproject3 extends JFrame implements Runnable {
         bottomPanel.add(laporanPenjualanButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
-
+        // === Aksi Tombol ===
         addProductButton.addActionListener(e -> {
             ProductForm pf = new ProductForm(this);
             productForms.add(pf);
             pf.setVisible(true);
         });
 
-
         addSellButton.addActionListener(e -> new SellingForm(this).setVisible(true));
         addCustomerButton.addActionListener(e -> new CustomerForm().setVisible(true));
         kelolaKategoriButton.addActionListener(e -> new CategoryForm(this).setVisible(true));
         laporanPenjualanButton.addActionListener(e -> new SalesReport(this).setVisible(true));
 
-
+        // === Tampilkan dan Jalankan Banner ===
         setVisible(true);
         new Thread(this).start();
     }
 
-
+    // === Banner Panel ===
     private class BannerPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
@@ -96,7 +92,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
-
+    // === Jalankan Animasi Banner ===
     @Override
     public void run() {
         width = getWidth();
@@ -114,7 +110,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
-
+    // === Banner Text dari Produk ===
     public String getBannerTextFromProducts() {
         StringBuilder sb = new StringBuilder("Menu yang tersedia: ");
         for (int i = 0; i < productList.size(); i++) {
@@ -124,28 +120,25 @@ public class Mavenproject3 extends JFrame implements Runnable {
         return sb.toString();
     }
 
-
     public void setBannerText(String newText) {
         this.text = newText;
         this.x = -getFontMetrics(new Font("Arial", Font.BOLD, 18)).stringWidth(text);
     }
 
-
     public void refreshBanner() {
         setBannerText(getBannerTextFromProducts());
     }
 
-
+    // === Getter Produk & Kategori ===
     public List<Product> getProductList() {
         return productList;
     }
-
 
     public List<String> getCategoryList() {
         return categoryList;
     }
 
-
+    // === Tambah & Hapus Kategori ===
     public void addCategory(String category) {
         if (!categoryList.contains(category)) {
             categoryList.add(category);
@@ -153,12 +146,10 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
-
     public void removeCategory(String category) {
         categoryList.remove(category);
         updateAllProductFormCategoryCombo();
     }
-
 
     public void updateAllProductFormCategoryCombo() {
         for (ProductForm pf : productForms) {
@@ -166,7 +157,16 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
+    // === Penjualan ===
+    public List<Sale> getSales() {
+        return sales;
+    }
 
+    public void addSale(Sale sale) {
+        sales.add(sale);
+    }
+
+    // === Main Method ===
     public static void main(String[] args) {
         new Mavenproject3();
     }
