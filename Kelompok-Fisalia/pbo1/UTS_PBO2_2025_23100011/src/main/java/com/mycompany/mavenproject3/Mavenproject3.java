@@ -23,6 +23,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
     private JButton addCustomerButton;
     private JButton kelolaKategoriButton;
     private JButton laporanPenjualanButton;
+    private JButton logoutButton; // Tambahan tombol logout
 
     private List<Product> productList = new ArrayList<>();
     private List<String> categoryList = new ArrayList<>(List.of("Coffee", "Dairy", "Juice", "Soda", "Tea"));
@@ -57,12 +58,15 @@ public class Mavenproject3 extends JFrame implements Runnable {
         addCustomerButton = new JButton("Kelola Customer");
         kelolaKategoriButton = new JButton("Kategori Produk");
         laporanPenjualanButton = new JButton("Laporan Penjualan");
+        logoutButton = new JButton("Logout"); // Tambah tombol logout
 
         bottomPanel.add(addProductButton);
         bottomPanel.add(addSellButton);
         bottomPanel.add(addCustomerButton);
         bottomPanel.add(kelolaKategoriButton);
         bottomPanel.add(laporanPenjualanButton);
+        bottomPanel.add(logoutButton); // Tambahkan ke panel
+
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Aksi tombol
@@ -76,6 +80,16 @@ public class Mavenproject3 extends JFrame implements Runnable {
         addCustomerButton.addActionListener(e -> new CustomerForm().setVisible(true));
         kelolaKategoriButton.addActionListener(e -> new CategoryForm(this).setVisible(true));
         laporanPenjualanButton.addActionListener(e -> new SalesReport(this).setVisible(true));
+
+        // Aksi tombol logout
+        logoutButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin logout?", "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                dispose(); // Menutup jendela saat ini
+                // new LoginForm().setVisible(true); // Jika ada form login
+                System.exit(0); // Keluar dari aplikasi
+            }
+        });
 
         setVisible(true);
         new Thread(this).start();

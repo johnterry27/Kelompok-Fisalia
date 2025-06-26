@@ -76,8 +76,8 @@ public class LoginForm extends JFrame {
 
             // Validasi Login (hardcoded)
             if (username.equals("admin") && password.equals("admin")) {
-                JOptionPane.showMessageDialog(this, "Login berhasil!");
-                dispose(); // Tutup form login
+                JOptionPane.showMessageDialog(this, "selamat, login anda berhasil!");
+                dispose();
                 new Mavenproject3(); // Buka aplikasi utama
             } else {
                 JOptionPane.showMessageDialog(this, "Username atau Password salah!", "Login Gagal", JOptionPane.ERROR_MESSAGE);
@@ -87,7 +87,7 @@ public class LoginForm extends JFrame {
         setVisible(true);
     }
 
-    // MAIN METHOD UTAMA DI SINI!
+    // MAIN METHOD UTAMA
     public static void main(String[] args) {
         SwingUtilities.invokeLater(LoginForm::new);
     }
