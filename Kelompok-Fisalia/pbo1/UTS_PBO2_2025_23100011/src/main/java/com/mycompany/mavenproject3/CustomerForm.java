@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class CustomerForm extends JFrame {
@@ -34,7 +33,7 @@ public class CustomerForm extends JFrame {
 
         setTitle("WK. Cuan | Data Pelanggan");
         setSize(750, 400);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE); // ✅ Supaya form ini bisa ditutup tanpa menutup aplikasi utama
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -43,7 +42,6 @@ public class CustomerForm extends JFrame {
         customerTable = new JTable(tableModel);
         add(new JScrollPane(customerTable), BorderLayout.CENTER);
 
-        // Agar Responsif
         customerTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         customerTable.setFillsViewportHeight(true);
 
@@ -93,7 +91,7 @@ public class CustomerForm extends JFrame {
                 return;
             }
 
-            Customer customer = new Customer(name, phone, email,address);
+            Customer customer = new Customer(name, phone, email, address);
             customerList.add(customer);
             tableModel.addRow(new Object[]{name, phone, email, address});
             clearFields();
@@ -107,7 +105,7 @@ public class CustomerForm extends JFrame {
                 String email = emailField.getText().trim();
                 String address = addressField.getText().trim();
 
-            if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty()) {
+                if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Semua field harus diisi!");
                     return;
                 }
@@ -158,7 +156,4 @@ public class CustomerForm extends JFrame {
         addressField.setText("");
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new CustomerForm().setVisible(true));
-    }
 }

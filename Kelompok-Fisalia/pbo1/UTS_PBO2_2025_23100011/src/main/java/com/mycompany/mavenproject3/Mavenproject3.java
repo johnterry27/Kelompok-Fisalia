@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Mavenproject3 extends JFrame implements Runnable {
@@ -26,7 +27,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
     private List<Product> productList = new ArrayList<>();
     private List<String> categoryList = new ArrayList<>(List.of("Coffee", "Dairy", "Juice", "Soda", "Tea"));
     private List<ProductForm> productForms = new ArrayList<>();
-    private List<Sale> sales = new ArrayList<>(); // Tambahkan ini untuk simpan transaksi
+    private List<Sale> sales = new ArrayList<>();
 
     public Mavenproject3() {
         setTitle("WK. STI Chill");
@@ -35,7 +36,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // === Data Produk Awal ===
+        // Data awal
         productList.add(new Product(1, "P001", "Americano", "Coffee", 10000, 10));
         productList.add(new Product(2, "P002", "Pandan Latte", "Coffee", 20000, 10));
         productList.add(new Product(3, "P003", "Aren Latte", "Coffee", 15000, 10));
@@ -45,11 +46,11 @@ public class Mavenproject3 extends JFrame implements Runnable {
         this.text = getBannerTextFromProducts();
         this.x = -getFontMetrics(new Font("Arial", Font.BOLD, 18)).stringWidth(text);
 
-        // === Banner ===
+        // Banner
         bannerPanel = new BannerPanel();
         add(bannerPanel, BorderLayout.CENTER);
 
-        // === Panel Bawah: Tombol Navigasi ===
+        // Panel tombol
         JPanel bottomPanel = new JPanel();
         addProductButton = new JButton("Kelola Produk");
         addSellButton = new JButton("Penjualan");
@@ -64,7 +65,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         bottomPanel.add(laporanPenjualanButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // === Aksi Tombol ===
+        // Aksi tombol
         addProductButton.addActionListener(e -> {
             ProductForm pf = new ProductForm(this);
             productForms.add(pf);
@@ -76,12 +77,11 @@ public class Mavenproject3 extends JFrame implements Runnable {
         kelolaKategoriButton.addActionListener(e -> new CategoryForm(this).setVisible(true));
         laporanPenjualanButton.addActionListener(e -> new SalesReport(this).setVisible(true));
 
-        // === Tampilkan dan Jalankan Banner ===
         setVisible(true);
         new Thread(this).start();
     }
 
-    // === Banner Panel ===
+    // Banner panel
     private class BannerPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
@@ -92,7 +92,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
-    // === Jalankan Animasi Banner ===
+    // Animasi banner
     @Override
     public void run() {
         width = getWidth();
@@ -110,7 +110,7 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
-    // === Banner Text dari Produk ===
+    // Banner dari produk
     public String getBannerTextFromProducts() {
         StringBuilder sb = new StringBuilder("Menu yang tersedia: ");
         for (int i = 0; i < productList.size(); i++) {
@@ -129,7 +129,6 @@ public class Mavenproject3 extends JFrame implements Runnable {
         setBannerText(getBannerTextFromProducts());
     }
 
-    // === Getter Produk & Kategori ===
     public List<Product> getProductList() {
         return productList;
     }
@@ -138,7 +137,6 @@ public class Mavenproject3 extends JFrame implements Runnable {
         return categoryList;
     }
 
-    // === Tambah & Hapus Kategori ===
     public void addCategory(String category) {
         if (!categoryList.contains(category)) {
             categoryList.add(category);
@@ -157,7 +155,6 @@ public class Mavenproject3 extends JFrame implements Runnable {
         }
     }
 
-    // === Penjualan ===
     public List<Sale> getSales() {
         return sales;
     }
@@ -166,8 +163,9 @@ public class Mavenproject3 extends JFrame implements Runnable {
         sales.add(sale);
     }
 
-    // === Main Method ===
+    // Diblokir akses langsung
     public static void main(String[] args) {
-        new Mavenproject3();
+        JOptionPane.showMessageDialog(null, "Akses ditolak! Silakan login terlebih dahulu.", "Akses Dibatasi", JOptionPane.ERROR_MESSAGE);
+        System.exit(0);
     }
 }

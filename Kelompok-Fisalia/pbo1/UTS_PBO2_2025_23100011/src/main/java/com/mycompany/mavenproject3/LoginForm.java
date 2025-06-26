@@ -1,8 +1,22 @@
 package com.mycompany.mavenproject3;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class LoginForm extends JFrame {
     private JTextField usernameField;
@@ -22,7 +36,7 @@ public class LoginForm extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel titleLabel = new JLabel("Silahkan login sebagai Admin", JLabel.CENTER);
+        JLabel titleLabel = new JLabel("Silakan login sebagai Admin", JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
         add(titleLabel, BorderLayout.NORTH);
@@ -30,7 +44,7 @@ public class LoginForm extends JFrame {
         // Username
         gbc.gridx = 0;
         gbc.gridy = 0;
-        formPanel.add(new JLabel("Username :"), gbc);
+        formPanel.add(new JLabel("Username:"), gbc);
 
         usernameField = new JTextField(15);
         gbc.gridx = 1;
@@ -39,7 +53,7 @@ public class LoginForm extends JFrame {
         // Password
         gbc.gridx = 0;
         gbc.gridy = 1;
-        formPanel.add(new JLabel("Password :"), gbc);
+        formPanel.add(new JLabel("Password:"), gbc);
 
         passwordField = new JPasswordField(15);
         gbc.gridx = 1;
@@ -55,15 +69,16 @@ public class LoginForm extends JFrame {
 
         add(formPanel, BorderLayout.CENTER);
 
+        // Aksi Login
         loginButton.addActionListener((ActionEvent e) -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
 
-            // Login hardcoded
+            // Validasi Login (hardcoded)
             if (username.equals("admin") && password.equals("admin")) {
                 JOptionPane.showMessageDialog(this, "Login berhasil!");
-                dispose(); // tutup login form
-                new Mavenproject3(); // buka aplikasi utama
+                dispose(); // Tutup form login
+                new Mavenproject3(); // Buka aplikasi utama
             } else {
                 JOptionPane.showMessageDialog(this, "Username atau Password salah!", "Login Gagal", JOptionPane.ERROR_MESSAGE);
             }
@@ -72,6 +87,7 @@ public class LoginForm extends JFrame {
         setVisible(true);
     }
 
+    // MAIN METHOD UTAMA DI SINI!
     public static void main(String[] args) {
         SwingUtilities.invokeLater(LoginForm::new);
     }
