@@ -33,12 +33,12 @@ public class CustomerForm extends JFrame {
 
         setTitle("WK. Cuan | Data Pelanggan");
         setSize(750, 400);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE); // ✅ Supaya form ini bisa ditutup tanpa menutup aplikasi utama
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
         // TABEL
-        tableModel = new DefaultTableModel(new String[]{"Nama", "No. HP", "Email", "Alamat"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Nama", "No. HP", "Email", "Alamat"}, 0);
         customerTable = new JTable(tableModel);
         add(new JScrollPane(customerTable), BorderLayout.CENTER);
 
@@ -47,16 +47,17 @@ public class CustomerForm extends JFrame {
 
         // FORM INPUT
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
         inputPanel.add(new JLabel("Nama:"));
         nameField = new JTextField(12);
         inputPanel.add(nameField);
 
         inputPanel.add(new JLabel("No. HP:"));
-        phoneField = new JTextField(10);
+        phoneField = new JTextField(15);
         inputPanel.add(phoneField);
 
         inputPanel.add(new JLabel("Email:"));
-        emailField = new JTextField(15);
+        emailField = new JTextField(20);
         inputPanel.add(emailField);
 
         inputPanel.add(new JLabel("Alamat:"));
@@ -76,10 +77,8 @@ public class CustomerForm extends JFrame {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(inputPanel, BorderLayout.CENTER);
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
-
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // ACTIONS
         saveButton.addActionListener(e -> {
             String name = nameField.getText().trim();
             String phone = phoneField.getText().trim();
@@ -93,7 +92,7 @@ public class CustomerForm extends JFrame {
 
             Customer customer = new Customer(name, phone, email, address);
             customerList.add(customer);
-            tableModel.addRow(new Object[]{name, phone, email, address});
+            tableModel.addRow(new Object[]{customer.getId(), name, phone, email, address});
             clearFields();
         });
 
@@ -110,16 +109,16 @@ public class CustomerForm extends JFrame {
                     return;
                 }
 
-                tableModel.setValueAt(name, row, 0);
-                tableModel.setValueAt(phone, row, 1);
-                tableModel.setValueAt(email, row, 2);
-                tableModel.setValueAt(address, row, 3);
-
                 Customer customer = customerList.get(row);
                 customer.setName(name);
                 customer.setPhone(phone);
                 customer.setEmail(email);
                 customer.setAddress(address);
+
+                tableModel.setValueAt(name, row, 1);
+                tableModel.setValueAt(phone, row, 2);
+                tableModel.setValueAt(email, row, 3);
+                tableModel.setValueAt(address, row, 4);
 
                 clearFields();
             } else {
@@ -138,13 +137,14 @@ public class CustomerForm extends JFrame {
             }
         });
 
+        // SELECT DATA
         customerTable.getSelectionModel().addListSelectionListener(e -> {
             int row = customerTable.getSelectedRow();
             if (row != -1) {
-                nameField.setText(tableModel.getValueAt(row, 0).toString());
-                phoneField.setText(tableModel.getValueAt(row, 1).toString());
-                emailField.setText(tableModel.getValueAt(row, 2).toString());
-                addressField.setText(tableModel.getValueAt(row, 3).toString());
+                nameField.setText(tableModel.getValueAt(row, 1).toString());
+                phoneField.setText(tableModel.getValueAt(row, 2).toString());
+                emailField.setText(tableModel.getValueAt(row, 3).toString());
+                addressField.setText(tableModel.getValueAt(row, 4).toString());
             }
         });
     }
@@ -155,5 +155,4 @@ public class CustomerForm extends JFrame {
         emailField.setText("");
         addressField.setText("");
     }
-
 }
