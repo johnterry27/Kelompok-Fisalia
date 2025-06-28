@@ -2,33 +2,58 @@ package com.mycompany.mavenproject3;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import com.toedter.calendar.JDateChooser;
+
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
 public class SalesReport extends JFrame {
+
     private JTable table;
     private DefaultTableModel tableModel;
     private JDateChooser startDateChooser, endDateChooser;
     private JComboBox<String> kodeProdukCombo;
 
     public SalesReport(Mavenproject3 mainApp) {
+        /* ========== Konfigurasi dasar frame ========== */
         setTitle("WK. Cuan | Laporan Penjualan");
         setSize(1000, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        /* ========== Header: Judul besar & Tanggal akses ========== */
         JLabel lblJudul = new JLabel("LAPORAN PENJUALAN", SwingConstants.CENTER);
         lblJudul.setFont(new Font("Arial", Font.BOLD, 18));
-        lblJudul.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        lblJudul.setBorder(BorderFactory.createEmptyBorder(10, 0, 2, 0));
 
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        JLabel lblTanggalAkses = new JLabel(
+                "Tanggal akses: " + dtf.format(LocalDate.now()),
+                SwingConstants.CENTER
+        );
+        lblTanggalAkses.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblTanggalAkses.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
+
+        JPanel panelJudul = new JPanel(new BorderLayout());
+        panelJudul.add(lblJudul, BorderLayout.NORTH);
+        panelJudul.add(lblTanggalAkses, BorderLayout.SOUTH);
+
+        /* ========== Panel filter (tanggal & kode produk) ========== */
         JPanel panelFilter = new JPanel(new FlowLayout());
         panelFilter.setBackground(Color.LIGHT_GRAY);
+
         startDateChooser = new JDateChooser();
         endDateChooser = new JDateChooser();
+        // Secara default isi kedua date chooser dengan hari ini
+        Date today = new Date();
+        startDateChooser.setDate(today);
+        endDateChooser.setDate(today);
 
         kodeProdukCombo = new JComboBox<>();
         kodeProdukCombo.addItem("-- Semua --");
@@ -37,6 +62,7 @@ public class SalesReport extends JFrame {
         }
 
         JButton btnFilter = new JButton("Filter");
+
         panelFilter.add(new JLabel("Tanggal Mulai"));
         panelFilter.add(startDateChooser);
         panelFilter.add(new JLabel("Tanggal Selesai"));
@@ -45,10 +71,12 @@ public class SalesReport extends JFrame {
         panelFilter.add(kodeProdukCombo);
         panelFilter.add(btnFilter);
 
+        /* ========== Panel atas (header + filter) ========== */
         JPanel panelAtas = new JPanel(new BorderLayout());
-        panelAtas.add(lblJudul, BorderLayout.NORTH);
+        panelAtas.add(panelJudul, BorderLayout.NORTH);
         panelAtas.add(panelFilter, BorderLayout.CENTER);
 
+        /* ========== Tabel laporan ========== */
         String[] kolom = {"Tanggal", "Kode Produk", "Nama Produk", "Harga Satuan", "Jumlah", "Total"};
         tableModel = new DefaultTableModel(null, kolom);
         table = new JTable(tableModel);
@@ -57,8 +85,9 @@ public class SalesReport extends JFrame {
         add(panelAtas, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
+        /* ========== Aksi tombol Filter ========== */
         btnFilter.addActionListener(e -> {
-            tableModel.setRowCount(0);
+            tableModel.setRowCount(0);                       // hapus data lama
             List<Sale> sales = mainApp.getSales();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -75,12 +104,12 @@ public class SalesReport extends JFrame {
 
                 if (cocok) {
                     tableModel.addRow(new Object[]{
-                        sdf.format(s.getDate()),
-                        s.getProductCode(),
-                        s.getProductName(),
-                        s.getPrice(),
-                        s.getQuantity(),
-                        s.getTotal()
+                            sdf.format(s.getDate()),
+                            s.getProductCode(),
+                            s.getProductName(),
+                            s.getPrice(),
+                            s.getQuantity(),
+                            s.getTotal()
                     });
                 }
             }
