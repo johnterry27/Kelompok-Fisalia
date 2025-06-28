@@ -1,33 +1,43 @@
 package com.mycompany.mavenproject3;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-import com.toedter.calendar.JDateChooser;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
+
 public class SalesReport extends JFrame {
 
     private JTable table;
     private DefaultTableModel tableModel;
     private JDateChooser startDateChooser, endDateChooser;
-    private JComboBox<String> kodeProdukCombo;
+    private JComboBox<String> namaProdukCombo;
 
     public SalesReport(Mavenproject3 mainApp) {
-        /* ========== Konfigurasi dasar frame ========== */
         setTitle("WK. Cuan | Laporan Penjualan");
         setSize(1000, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        /* ========== Header: Judul besar & Tanggal akses ========== */
+        // Header: Judul dan Tanggal akses
         JLabel lblJudul = new JLabel("LAPORAN PENJUALAN", SwingConstants.CENTER);
         lblJudul.setFont(new Font("Arial", Font.BOLD, 18));
         lblJudul.setBorder(BorderFactory.createEmptyBorder(10, 0, 2, 0));
@@ -44,21 +54,20 @@ public class SalesReport extends JFrame {
         panelJudul.add(lblJudul, BorderLayout.NORTH);
         panelJudul.add(lblTanggalAkses, BorderLayout.SOUTH);
 
-        /* ========== Panel filter (tanggal & kode produk) ========== */
+        // Filter Panel
         JPanel panelFilter = new JPanel(new FlowLayout());
         panelFilter.setBackground(Color.LIGHT_GRAY);
 
         startDateChooser = new JDateChooser();
         endDateChooser = new JDateChooser();
-        // Secara default isi kedua date chooser dengan hari ini
         Date today = new Date();
         startDateChooser.setDate(today);
         endDateChooser.setDate(today);
 
-        kodeProdukCombo = new JComboBox<>();
-        kodeProdukCombo.addItem("-- Semua --");
+        namaProdukCombo = new JComboBox<>();
+        namaProdukCombo.addItem("-- Semua --");
         for (Product p : mainApp.getProductList()) {
-            kodeProdukCombo.addItem(p.getCode());
+            namaProdukCombo.addItem(p.getName());
         }
 
         JButton btnFilter = new JButton("Filter");
@@ -67,16 +76,16 @@ public class SalesReport extends JFrame {
         panelFilter.add(startDateChooser);
         panelFilter.add(new JLabel("Tanggal Selesai"));
         panelFilter.add(endDateChooser);
-        panelFilter.add(new JLabel("Kode Produk"));
-        panelFilter.add(kodeProdukCombo);
+        panelFilter.add(new JLabel("Nama Produk"));
+        panelFilter.add(namaProdukCombo);
         panelFilter.add(btnFilter);
 
-        /* ========== Panel atas (header + filter) ========== */
+        // Panel atas
         JPanel panelAtas = new JPanel(new BorderLayout());
         panelAtas.add(panelJudul, BorderLayout.NORTH);
         panelAtas.add(panelFilter, BorderLayout.CENTER);
 
-        /* ========== Tabel laporan ========== */
+        // Tabel
         String[] kolom = {"Tanggal", "Kode Produk", "Nama Produk", "Harga Satuan", "Jumlah", "Total"};
         tableModel = new DefaultTableModel(null, kolom);
         table = new JTable(tableModel);
@@ -85,9 +94,9 @@ public class SalesReport extends JFrame {
         add(panelAtas, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        /* ========== Aksi tombol Filter ========== */
+        // Tombol Filter
         btnFilter.addActionListener(e -> {
-            tableModel.setRowCount(0);                       // hapus data lama
+            tableModel.setRowCount(0); // hapus data lama
             List<Sale> sales = mainApp.getSales();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -99,8 +108,8 @@ public class SalesReport extends JFrame {
                 if (start != null && s.getDate().before(start)) cocok = false;
                 if (end != null && s.getDate().after(end)) cocok = false;
 
-                String kodeDipilih = (String) kodeProdukCombo.getSelectedItem();
-                if (!"-- Semua --".equals(kodeDipilih) && !s.getProductCode().equals(kodeDipilih)) cocok = false;
+                String namaDipilih = (String) namaProdukCombo.getSelectedItem();
+                if (!"-- Semua --".equals(namaDipilih) && !s.getProductName().equals(namaDipilih)) cocok = false;
 
                 if (cocok) {
                     tableModel.addRow(new Object[]{
